@@ -22,5 +22,5 @@ jobs:
         run: |
           git checkout develop
           git pull origin develop
-          git merge --no-ff main
+          git merge --allow-unrelated-histories --no-ff main
           git push origin develop
