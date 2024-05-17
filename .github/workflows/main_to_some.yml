@@ -17,7 +17,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           git branch -a 
-          git checkout origin/development
+          git checkout development
           git merge --no-ff main
           git push origin develop
           
