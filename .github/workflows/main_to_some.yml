@@ -21,6 +21,5 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           git checkout develop
-          git pull origin develop
-          git merge --allow-unrelated-histories --no-ff main
-          git push origin develop
+          git merge --no-ff main
+          git push origin/develop
