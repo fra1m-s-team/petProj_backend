@@ -22,10 +22,8 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           git branch -a 
-          git checkout remotes/origin/development
-          git branch -a 
           git merge --no-ff main
-          git push
+          git push remotes/origin/develop
 
       # Sync changes to vasya branch
       - name: Merge into vasya
