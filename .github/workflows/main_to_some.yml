@@ -24,6 +24,7 @@ jobs:
       - name: Merge into vasya
         if: github.ref == 'refs/heads/main'
         run: |
+          git branch -a
           git checkout vasya
           git merge --no-ff main
           git push origin vasya
