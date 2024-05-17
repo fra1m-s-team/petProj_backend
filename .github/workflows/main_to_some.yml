@@ -16,6 +16,7 @@ jobs:
       - name: Merge into develop
         if: github.ref == 'refs/heads/main'
         run: |
+          git branch -a 
           git checkout development
           git merge --no-ff main
           git push origin develop
