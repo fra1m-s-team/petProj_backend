@@ -12,6 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Configure Git user
+      - name: Configure Git user
+        run: |
+          git config --global user.email "frugas@list.ru"
+          git config --global user.name "fra1m"
+
       # Fetch all remote branches
       - name: Fetch all branches
         run: git fetch --all
