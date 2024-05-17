@@ -1,0 +1,29 @@
+name: Sync Main to Other Branches
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      # Sync changes to develop branch
+      - name: Merge into develop
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git checkout develop
+          git merge --no-ff main
+          git push origin develop
+          
+      # Sync changes to vasya branch
+      - name: Merge into vasya
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git checkout vasya
+          git merge --no-ff main
+          git push origin vasya
