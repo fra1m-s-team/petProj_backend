@@ -12,20 +12,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Configure Git user
-      - name: Configure Git user
-        run: |
-          git config --global user.email "frugas@list.ru"
-          git config --global user.name "fra1m"
+      # Switch to main branch
+      - name: Switch to main branch
+        run: git checkout main
 
-      # Fetch all remote branches
-      - name: Fetch all branches
-        run: git fetch --all
+      # Pull changes from main branch
+      - name: Pull changes from main branch
+        run: git pull origin main
 
-      # Sync changes to develop branch
-      - name: Merge into develop
-        if: github.ref == 'refs/heads/main'
+      # Switch back to develop branch
+      - name: Switch back to develop branch
+        run: git checkout develop
+
+      # Merge changes from main branch
+      - name: Merge changes from main branch into develop
         run: |
-          git checkout develop
-          git merge --allow-unrelated-histories --no-ff main
-          git push origin/develop
+          git merge --no-ff main
+          git commit -m "Merge changes from main into develop"
+          git push origin develop
