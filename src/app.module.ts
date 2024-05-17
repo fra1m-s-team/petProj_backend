@@ -6,7 +6,7 @@ import { UserModule } from './models/user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      cache: true,
+      // cache: true,
       isGlobal: true,
       envFilePath: `.env`,
     }),
