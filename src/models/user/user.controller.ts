@@ -13,5 +13,4 @@ import { CreateUserDto } from './dto/createUser.dto';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
 }
