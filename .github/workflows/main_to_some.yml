@@ -10,10 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses:
-          actions/checkout@v2
+        uses: actions/checkout@v2
 
-          # Fetch all remote branches
+      # Fetch all remote branches
       - name: Fetch all branches
         run: git fetch --all
 
@@ -21,15 +20,7 @@ jobs:
       - name: Merge into develop
         if: github.ref == 'refs/heads/main'
         run: |
-          git branch -a 
+          git checkout develop
+          git pull origin develop
           git merge --no-ff main
-          git push remotes/origin/develop
-
-      # Sync changes to vasya branch
-      - name: Merge into vasya
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git branch -a
-          git checkout remotes/origin/vasya
-          git merge main
-          git push
+          git push origin develop
