@@ -24,7 +24,7 @@ jobs:
           git branch -a 
           git checkout remotes/origin/development
           git branch -a 
-          git merge main
+          git merge --no-ff main
           git push
 
       # Sync changes to vasya branch
