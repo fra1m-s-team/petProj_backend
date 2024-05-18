@@ -23,16 +23,18 @@ export class AuthService {
       token: this.jwtService.sign(payload),
     };
   }
-
-  // async registration(userDto: CreateUserDto) {
+  //FIXME: Исправь логику, не аус сервис использует юзер сервис, а чтобы юзер сервис использовал аус
+  // async registration(user: CreateUserDto) {
   //   const hashPassword = await crypto.hash(
   //     userDto.password,
   //     +this.configService.get<string>('SALT_ROUNDS'),
   //   );
-
+  //
   //   const user = await this.userService.createUser({
   //     ...userDto,
   //     password: hashPassword,
   //   });
+  //
+  //   return await generateToken(user)
   // }
 }
