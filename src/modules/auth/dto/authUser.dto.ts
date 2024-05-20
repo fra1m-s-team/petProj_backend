@@ -10,11 +10,11 @@ export class AuthUserDto {
   @ApiProperty({
     example: 'pass123',
     description: 'Пароль пользователя',
-    minLength: 8,
+    minLength: 6,
     maxLength: 16,
   })
   @IsString({ message: 'Должно быть строкой' })
-  @Length(8, 16, {
+  @Length(6, 16, {
     message: 'Длинна пароля должна быть не меньше 8 и не больше 16',
   })
   password: string;

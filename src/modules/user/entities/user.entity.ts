@@ -26,4 +26,6 @@ export class UserEntity extends BaseEntity {
   })
   @Column({ nullable: false })
   name: string;
+
+  //TODO: Cделать поле task связь с TaskEntity продумай сам
 }

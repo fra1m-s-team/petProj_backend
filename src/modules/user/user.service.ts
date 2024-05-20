@@ -18,7 +18,7 @@ export class UserService {
     const candidate = await this.getUserByEmail(email);
 
     if (candidate) {
-      return new HttpException(
+      throw new HttpException(
         'Пользователь с таким email существует',
         HttpStatus.BAD_REQUEST,
       );
@@ -29,7 +29,7 @@ export class UserService {
     const candidate = await this.getUserByEmail(authUserDto.email);
 
     if (!candidate) {
-      return new HttpException(
+      throw new HttpException(
         'Пользователь с таким email не существует',
         HttpStatus.BAD_REQUEST,
       );
@@ -40,7 +40,7 @@ export class UserService {
   }
 
   async registrationUser(createUserDto: CreateUserDto) {
-    await this.validateUser(createUserDto.email);
+    const user$ = await this.validateUser(createUserDto.email);
 
     const user = await this.userRepository.save(createUserDto);
     const token = await this.authService.generateToken(user);

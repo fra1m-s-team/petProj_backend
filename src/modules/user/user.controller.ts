@@ -19,14 +19,17 @@ export class UserController {
   @ApiOperation({ summary: 'Cоздание пользователя' })
   @ApiResponse({ status: 200, type: UserEntity })
   @Post('/registration')
-  registrationUser(@Body() userDto: CreateUserDto) {
-    return this.userService.registrationUser(userDto);
+  async registrationUser(@Body() userDto: CreateUserDto) {
+    const res = await this.userService.registrationUser(userDto);
+    return { message: 'Congratulations, you can play', user: res };
   }
 
   @ApiOperation({ summary: 'Авторизация пользователя' })
   @ApiResponse({ status: 200, type: UserEntity })
   @Post('/auth')
-  authUser(@Body() userDto: AuthUserDto) {
-    return this.userService.authUser(userDto);
+  async authUser(@Body() userDto: AuthUserDto) {
+    console.log('asdasd');
+    const res = await this.userService.authUser(userDto);
+    return { message: 'Congratulations, you can play', user: res };
   }
 }
