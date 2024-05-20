@@ -9,19 +9,18 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
-  # backend_play2learn:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - 8080:8080
-  #   volumes:
-  #     - ./app
-  #     - /app/node_modules
-  #   command: yarn dev
-  #   depends_on:
-  #     - db
-  #     # - redis
-  #   restart: always
+  backend_play2learn:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: yarn dev
+    depends_on:
+      - db_play2learn
+    restart: always

@@ -11,7 +11,6 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@entities/*": ["src/entities/*"],
       "@modules/*": ["src/modules/*"]
     },
     "incremental": true,
