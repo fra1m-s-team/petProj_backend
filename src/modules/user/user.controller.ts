@@ -9,7 +9,7 @@ import {
 import { JwtAuthGuard } from '@modules/auth/jwt-auth.guard';
 import { AuthUserDto } from '@modules/auth/dto/authUser.dto';
 import { CreateUserDto } from './dto/createUser.dto';
-import { UserEntity } from './entities/User.entity';
+import { UserEntity } from './entities/user.entity';
 
 @ApiTags('User CRUD')
 @Controller('user')
