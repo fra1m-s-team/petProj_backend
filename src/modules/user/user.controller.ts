@@ -28,7 +28,6 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserEntity })
   @Post('/auth')
   async authUser(@Body() userDto: AuthUserDto) {
-    console.log('asdasd');
     const res = await this.userService.authUser(userDto);
     return { message: 'Congratulations, you can play', user: res };
   }

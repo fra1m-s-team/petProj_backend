@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { AuthUserDto } from '@modules/auth/dto/authUser.dto';
+import OpenAI from 'openai';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -12,6 +14,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private authService: AuthService,
+    private configService: ConfigService,
   ) {}
 
   private async validateUser(email: string) {
@@ -35,6 +38,9 @@ export class UserService {
       );
     }
 
+    //FIXME: Сделать todo
+    // await this.main('Напиши на англиском готово!');
+
     const token = await this.authService.generateToken(candidate);
     return { ...candidate, ...token };
   }
@@ -53,4 +59,18 @@ export class UserService {
     });
     return user;
   }
+
+  // TODO: Подключить платный план для тестов
+  // async main(text: string) {
+  //   const openai = new OpenAI({
+  //     apiKey: this.configService.get('GPT_KEY'),
+  //   });
+
+  //   const completion = await openai.chat.completions.create({
+  //     messages: [{ role: 'system', content: text }],
+  //     model: 'gpt-3.5-turbo-16k',
+  //   });
+
+  //   console.log(completion.choices[0]);
+  // }
 }
