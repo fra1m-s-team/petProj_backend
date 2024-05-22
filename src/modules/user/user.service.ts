@@ -39,7 +39,7 @@ export class UserService {
     }
 
     //FIXME: Сделать todo
-    // await this.main('Напиши на англиском готово!');
+    await this.main('Напиши на англиском готово!');
 
     const token = await this.authService.generateToken(candidate);
     return { ...candidate, ...token };
@@ -61,16 +61,16 @@ export class UserService {
   }
 
   // TODO: Подключить платный план для тестов
-  // async main(text: string) {
-  //   const openai = new OpenAI({
-  //     apiKey: this.configService.get('GPT_KEY'),
-  //   });
+  async main(text: string) {
+    const openai = new OpenAI({
+      apiKey: this.configService.get('GPT_KEY'),
+    });
 
-  //   const completion = await openai.chat.completions.create({
-  //     messages: [{ role: 'system', content: text }],
-  //     model: 'gpt-3.5-turbo-16k',
-  //   });
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: 'user', content: text }],
+      model: 'gpt-3.5-turbo-instruct',
+    });
 
-  //   console.log(completion.choices[0]);
-  // }
+    console.log(completion.choices[0]);
+  }
 }
