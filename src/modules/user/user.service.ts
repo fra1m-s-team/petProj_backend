@@ -37,16 +37,18 @@ export class UserService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
+    const user = await this.authService.auth(authUserDto, candidate);
     //FIXME: Сделать todo
     // await this.main('Напиши на англиском готово!');
 
     const token = await this.authService.generateToken(candidate);
-    return { ...candidate, ...token };
+    return { ...user, ...token };
   }
 
   async registrationUser(createUserDto: CreateUserDto) {
     const user$ = await this.validateUser(createUserDto.email);
+
+    createUserDto.password = await this.authService.hashPassword(createUserDto);
 
     const user = await this.userRepository.save(createUserDto);
     const token = await this.authService.generateToken(user);

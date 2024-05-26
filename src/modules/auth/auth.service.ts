@@ -24,16 +24,16 @@ export class AuthService {
     };
   }
 
-  async registration(user: UserEntity) {
+  async hashPassword(user: CreateUserDto) {
     const hashPassword = await crypto.hash(
       user.password,
       +this.configService.get<string>('SALT_ROUNDS'),
     );
 
-    return await this.generateToken(user);
+    return hashPassword;
   }
 
-  private async auth(userDto: AuthUserDto, user: UserEntity) {
+  async auth(userDto: AuthUserDto, user: UserEntity) {
     const passwordCompare = await crypto.compare(
       userDto.password,
       user.password,
