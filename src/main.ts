@@ -22,6 +22,12 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
+  app.enableCors({
+    origin: 'http://localhost:5173', // Разрешаем запросы только с этого домена
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Разрешенные методы
+    credentials: true, // Если нужно передавать cookies или заголовки авторизации
+  });
+
   await app.listen(port);
   console.log(
     `App started on ${host}${port}\nДокументация: ${host}${port}/swagger`,
