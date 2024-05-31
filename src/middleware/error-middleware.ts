@@ -5,9 +5,8 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { error } from 'console';
 import { Request, Response, NextFunction } from 'express';
-import { ApiError } from 'src/exceptions/api-error';
+// import { ApiError } from 'src/exceptions/api-error';
 
 @Injectable()
 export class ApiErrorMiddleware implements NestMiddleware {
@@ -19,16 +18,13 @@ export class ApiErrorMiddleware implements NestMiddleware {
     );
 
     if (!res) {
-      // Генерация HttpException
       const error = new HttpException(
         'Ваше сообщение об ошибке',
         HttpStatus.BAD_REQUEST,
       );
-      // Передача ошибки через next()
       this.logger.error(req.errored);
       next(error);
     } else {
-      // Если ошибки нет, просто вызываем next()
       next();
     }
   }
