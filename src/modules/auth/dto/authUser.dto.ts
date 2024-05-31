@@ -1,8 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { UserEntity } from '@modules/user/entities/user.entity';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { IsEmail, IsString, Length } from 'class-validator';
 
 export class AuthUserDto {
-  @ApiProperty({ example: 'user@user.ru', description: 'Почта пользователя' })
+  @ApiProperty({
+    type: PickType(UserEntity, ['email'] as const)['email'],
+    description: 'Почта пользователя',
+  })
   @IsString({ message: 'Должно быть строкой' })
   @IsEmail({}, { message: 'Не корректный email' })
   email: string;

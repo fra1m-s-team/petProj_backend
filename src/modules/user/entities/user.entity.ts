@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { TokenEntity } from '@modules/auth/entities/token.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -7,7 +15,10 @@ export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ example: 'user@user.ru', description: 'Почта пользователя' })
+  @ApiProperty({
+    example: `user_${Math.random().toString(36).substring(7)}@example.com`,
+    description: 'Почта пользователя',
+  })
   @Column({ unique: true, nullable: false })
   email: string;
 
@@ -21,11 +32,28 @@ export class UserEntity extends BaseEntity {
   password: string;
 
   @ApiProperty({
-    example: 'Антон',
+    example: 'TestDeveloper',
     description: 'Имя пользователя',
   })
   @Column({ nullable: false })
   name: string;
 
-  //TODO: Cделать поле task связь с TaskEntity продумай сам
+  @ApiProperty({ example: false, description: 'Статус автивации по почте' })
+  @Column({ default: false })
+  isActivated: boolean;
+
+  @ApiProperty({
+    example: '97541ee5-795d-4a2d-a04b-4f7473c6822f',
+    description: 'Ссылка подтверждения почты',
+  })
+  @Column()
+  activationLink: string;
+
+  @ApiProperty({
+    example: [TokenEntity],
+    description: 'Массив токенов пользователя',
+  })
+  @OneToMany(() => TokenEntity, (token) => token.userId)
+  // @JoinColumn({ name: 'tokenId' })
+  token: TokenEntity[];
 }

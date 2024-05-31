@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modules/user/user.module';
 import { TaskModule } from '@modules/task/task.module';
+import { MailModule } from '@modules/mail/mail.module';
+import { ApiErrorMiddleware } from './middleware/error-middleware';
 
 @Module({
   imports: [
@@ -28,8 +30,13 @@ import { TaskModule } from '@modules/task/task.module';
     }),
     UserModule,
     TaskModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ApiErrorMiddleware).forRoutes('*');
+  }
+}

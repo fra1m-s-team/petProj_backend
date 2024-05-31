@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from './pipes/validation.pipe';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,13 +21,15 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document);
 
-  app.useGlobalPipes(new ValidationPipe());
+  // app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
     origin: 'http://localhost:5173', // Разрешаем запросы только с этого домена
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Разрешенные методы
     credentials: true, // Если нужно передавать cookies или заголовки авторизации
   });
+
+  app.use(cookieParser());
 
   await app.listen(port);
   console.log(
