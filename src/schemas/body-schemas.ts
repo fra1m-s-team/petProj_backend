@@ -1,5 +1,5 @@
 import { UserEntity } from '@modules/user/entities/user.entity';
-import { OmitType, PickType } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
 
 class RegistrationBodySchema extends PickType(UserEntity, [
   'name',

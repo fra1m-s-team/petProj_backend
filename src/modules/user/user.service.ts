@@ -129,18 +129,4 @@ export class UserService {
     });
     return user;
   }
-
-  // TODO: Подключить платный план для тестов
-  // async main(text: string) {
-  //   const openai = new OpenAI({
-  //     apiKey: this.configService.get('GPT_KEY'),
-  //   });
-
-  //   const completion = await openai.chat.completions.create({
-  //     messages: [{ role: 'user', content: text }],
-  //     model: 'gpt-3.5-turbo-instruct',
-  //   });
-
-  //   console.log(completion.choices[0]);
-  // }
 }

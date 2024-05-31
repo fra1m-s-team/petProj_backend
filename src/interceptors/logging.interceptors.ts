@@ -1,7 +1,6 @@
 import {
   CallHandler,
   ExecutionContext,
-  HttpException,
   Injectable,
   Logger,
   NestInterceptor,
@@ -29,7 +28,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const now = Date.now();
     return next.handle().pipe(
-      tap((res) => {
+      tap(() => {
         const respones = context.switchToHttp().getResponse();
         console.log(respones.cookie['refreshToken']);
         const { statusCode } = respones;

@@ -4,7 +4,6 @@ import {
   Column,
   BaseEntity,
   OneToMany,
-  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { TokenEntity } from '@modules/auth/entities/token.entity';

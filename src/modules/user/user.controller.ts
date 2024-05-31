@@ -3,34 +3,25 @@ import {
   Get,
   Post,
   Body,
-  UseGuards,
-  HttpException,
   HttpStatus,
   Res,
   Param,
   UseInterceptors,
-  UseFilters,
-  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiBody,
   ApiCookieAuth,
   ApiExtraModels,
-  ApiHeader,
   ApiOperation,
-  ApiParam,
   ApiResponse,
   ApiTags,
-  getSchemaPath,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@modules/auth/jwt-auth.guard';
 import { AuthUserDto } from '@modules/auth/dto/authUser.dto';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UserEntity } from './entities/user.entity';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptors';
 import { TokenEntity } from '@modules/auth/entities/token.entity';
 import {

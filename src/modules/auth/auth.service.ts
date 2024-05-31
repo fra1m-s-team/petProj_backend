@@ -5,7 +5,6 @@ import { UserEntity } from '../user/entities/user.entity';
 import { CreateUserDto } from '../user/dto/createUser.dto';
 import * as crypto from 'bcryptjs';
 import { AuthUserDto } from './dto/authUser.dto';
-import { sign } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenEntity } from './entities/token.entity';
 import { Repository } from 'typeorm';
