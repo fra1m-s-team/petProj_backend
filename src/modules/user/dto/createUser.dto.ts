@@ -1,8 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, Length } from 'class-validator';
+import { ApiProperty, PickType } from '@nestjs/swagger';
+import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
+import { UserEntity } from '../entities/user.entity';
 
 export class CreateUserDto {
-  @ApiProperty({ example: 'user@user.ru', description: 'Почта пользователя' })
+  @ApiProperty({
+    example: 'user_uf3h4u@example.com',
+    description: 'Почта пользователя',
+  })
   @IsString({ message: 'Должно быть строкой' })
   @IsEmail({}, { message: 'Не корректный email' })
   email: string;
@@ -22,4 +26,12 @@ export class CreateUserDto {
   @ApiProperty({ example: 'Антон', description: 'Имя пользователя' })
   @IsString({ message: 'Должно быть строкой' })
   name: string;
+
+  @ApiProperty({
+    example: 'vdas32-asdasd-213asd-23-sd',
+    description: 'Ссылка подтверждения почты',
+  })
+  @IsOptional()
+  @IsString({ message: 'Должно быть строкой' })
+  activationLink?: string;
 }
