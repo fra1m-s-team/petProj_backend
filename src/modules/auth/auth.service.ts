@@ -74,7 +74,6 @@ export class AuthService {
       tokenData.token = refreshToken;
       return await this.tokenRepository.save(tokenData);
     }
-    console.log('TOKEN: ', tokenData);
 
     const token = new TokenEntity();
     token.userId = user;

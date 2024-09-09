@@ -1,5 +1,5 @@
 services:
-  db_play2learn:
+  data_base:
     image: postgres:16.2-alpine3.19
     restart: always
     ports:
@@ -9,7 +9,7 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
-  backend_play2learn:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
@@ -22,5 +22,5 @@ services:
       - /app/node_modules
     command: yarn dev
     depends_on:
-      - db_play2learn
+      - data_base
     restart: always

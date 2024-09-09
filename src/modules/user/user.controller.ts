@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import {
   Controller,
   Get,
@@ -8,7 +9,6 @@ import {
   Param,
   UseInterceptors,
 } from '@nestjs/common';
-import { UserService } from './user.service';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -18,24 +18,21 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserService } from './user.service';
 import { AuthUserDto } from '@modules/auth/dto/authUser.dto';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UserEntity } from './entities/user.entity';
-import { Response } from 'express';
-import { LoggingInterceptor } from 'src/interceptors/logging.interceptors';
+import { LoggingInterceptor } from '@interceptors/logging.interceptors';
 import { TokenEntity } from '@modules/auth/entities/token.entity';
 import {
   AuthResponseSchema,
   LogoutResponseSchema,
   RefreshTokenResponseSchema,
   RegistrationResponseSchema,
-} from 'src/schemas/respones-schemas';
-import {
-  AuthBodySchema,
-  RegistrationBodySchema,
-} from 'src/schemas/body-schemas';
-import { RegistrationErrorSchema } from 'src/schemas/error-schemas';
-import { Cookies } from 'src/decorators/cookie.decorator';
+} from '@schemas/respones-schemas';
+import { AuthBodySchema, RegistrationBodySchema } from '@schemas/body-schemas';
+import { RegistrationErrorSchema } from '@schemas/error-schemas';
+import { Cookies } from '@decorators/cookie.decorator';
 
 @ApiTags('User CRUD')
 @UseInterceptors(LoggingInterceptor)
