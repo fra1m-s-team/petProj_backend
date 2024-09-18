@@ -28,7 +28,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     example: 'vdas32-asdasd-213asd-23-sd',
-    description: 'Ссылка подтверждения почты',
+    description: 'Ссылка подтверждения',
   })
   @IsOptional()
   @IsString({ message: 'Должно быть строкой' })

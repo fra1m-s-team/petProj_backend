@@ -5,11 +5,13 @@ import { AuthModule } from '../auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { MailModule } from '@modules/mail/mail.module';
+import { CodeModule } from '@modules/code/code.module';
 
 @Module({
   imports: [
     MailModule,
-    forwardRef(() => AuthModule),
+    AuthModule,
+    CodeModule,
     TypeOrmModule.forFeature([UserEntity]),
   ],
   controllers: [UserController],

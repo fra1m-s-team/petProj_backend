@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../user/entities/user.entity';
@@ -8,6 +13,7 @@ import { AuthUserDto } from './dto/authUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenEntity } from './entities/token.entity';
 import { Repository } from 'typeorm';
+import { CodeService } from '@modules/code/code.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +22,7 @@ export class AuthService {
     private tokenRepository: Repository<TokenEntity>,
     private configService: ConfigService,
     private jwtService: JwtService,
+    private codeService: CodeService,
   ) {}
 
   async generateToken(user: UserEntity) {
@@ -91,13 +98,14 @@ export class AuthService {
   async findToken(refreshToken: string) {
     const token = await this.tokenRepository.findOne({
       where: { token: refreshToken },
+      relations: ['userId'],
     });
     return token;
   }
 
-  async hashPassword(user: CreateUserDto) {
+  async hashPassword(password: string) {
     const hashPassword = await crypto.hash(
-      user.password,
+      password,
       +this.configService.get<string>('SALT_ROUNDS'),
     );
 
@@ -113,6 +121,36 @@ export class AuthService {
     if (user && passwordCompare) {
       return user;
     }
-    throw new UnauthorizedException('Неккоректный логин или пароль');
+
+    throw new HttpException(
+      'Неккоректный логин или пароль',
+      HttpStatus.UNAUTHORIZED,
+    );
+  }
+
+  async newHashPassword(
+    password: string,
+    newPassword: string,
+    user: UserEntity,
+  ) {
+    const passwordCompare = await crypto.compare(password, user.password);
+    if (!passwordCompare) {
+      throw new HttpException(
+        'Старый пароль не верный',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const newPasswordMatch = await crypto.compare(newPassword, user.password);
+    if (newPasswordMatch) {
+      throw new HttpException(
+        'Пароль не должен совпадать с предыдущем',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const hashPassword = await this.hashPassword(newPassword);
+
+    return hashPassword;
   }
 }

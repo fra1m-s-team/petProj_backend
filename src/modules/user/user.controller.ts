@@ -8,6 +8,7 @@ import {
   Res,
   Param,
   UseInterceptors,
+  HttpException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -29,10 +30,13 @@ import {
   LogoutResponseSchema,
   RefreshTokenResponseSchema,
   RegistrationResponseSchema,
+  sendСonfirmCode,
+  updateUser,
 } from '@schemas/respones-schemas';
 import { AuthBodySchema, RegistrationBodySchema } from '@schemas/body-schemas';
 import { RegistrationErrorSchema } from '@schemas/error-schemas';
 import { Cookies } from '@decorators/cookie.decorator';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @ApiTags('User CRUD')
 @UseInterceptors(LoggingInterceptor)
@@ -148,5 +152,58 @@ export class UserController {
     }
   }
 
-  //TODO: delete(user), patch(pass/email)
+  @ApiCookieAuth('refreshToken')
+  @ApiOperation({ summary: 'Смена пароля' })
+  @ApiResponse({ status: 200, type: updateUser })
+  @Post('/patch')
+  async userPatch(
+    @Cookies('refreshToken') token: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Res() res: Response,
+  ) {
+    try {
+      if (!token) {
+        return res
+          .status(HttpStatus.UNAUTHORIZED)
+          .json({ message: 'Вы не авторизованы' });
+      }
+      const payload = await this.userService.updateUser(updateUserDto, token);
+
+      if (payload === false) {
+        return res
+          .status(HttpStatus.BAD_REQUEST)
+          .json('Произошла ошибка попробуйте снова');
+      }
+
+      return res
+        .status(HttpStatus.OK)
+        .clearCookie('refreshToken')
+        .redirect('http://localhost:5173/auth');
+    } catch (error) {
+      return res.status(error.status).json({ message: error.message });
+    }
+  }
+
+  @ApiCookieAuth('refreshToken')
+  @ApiOperation({ summary: 'Отправка кода пользователю' })
+  @ApiResponse({ status: 200, type: sendСonfirmCode })
+  @Post('/send-code')
+  async sendCode(@Cookies('refreshToken') token: string, @Res() res: Response) {
+    try {
+      if (!token) {
+        return res
+          .status(HttpStatus.UNAUTHORIZED)
+          .json({ message: 'Вы не авторизованы' });
+      }
+
+      const payload = await this.userService.sendCode(token);
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ mesage: 'Код отправлен вам на почту', ...payload });
+    } catch (error) {
+      return res.status(error.status).json({ message: error.message });
+    }
+  }
+  //TODO: delete(user), patch(email)
 }

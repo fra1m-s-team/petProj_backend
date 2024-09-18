@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { TokenEntity } from './entities/token.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CodeModule } from '@modules/code/code.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         },
       }),
     }),
+    CodeModule,
   ],
   providers: [AuthService, JwtAuthGuard],
   exports: [AuthService, JwtModule],

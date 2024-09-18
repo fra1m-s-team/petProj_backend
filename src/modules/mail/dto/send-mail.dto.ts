@@ -18,17 +18,24 @@ export class SendMailDto {
   @IsEmail({}, { message: 'Не корректный email' })
   recipients: string;
 
-  // @ApiProperty({
-  //   example: 'Курс',
-  //   description: 'Тема письма',
-  // })
-  // @IsString({ message: 'Должно быть строкой' })
-  // subject: string;
+  @ApiProperty({
+    example: 'Поддтверждение почты',
+    description: 'Тема письма',
+  })
+  @IsString({ message: 'Должно быть строкой' })
+  subject: string;
+
+  @ApiProperty({
+    example: '12341',
+    description: 'Код поддтверждение смены пароля',
+  })
+  @IsString({ message: 'Должно быть строкой' })
+  code?: number;
 
   @ApiProperty({
     example: 'Биткоин стал 64540$',
     description: 'Содержимое письмя',
   })
   @IsString({ message: 'Должно быть строкой' })
-  activationLink: string;
+  activationLink?: string;
 }

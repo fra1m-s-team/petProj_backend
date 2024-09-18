@@ -25,7 +25,7 @@ async function bootstrap() {
   // app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
-    origin: 'http://localhost:5173', // Разрешаем запросы только с этого домена
+    origin: configService.get('CLIENT_URL'), // Разрешаем запросы только с этого домена
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Разрешенные методы
     credentials: true, // Если нужно передавать cookies или заголовки авторизации
   });
