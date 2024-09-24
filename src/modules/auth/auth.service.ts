@@ -123,7 +123,7 @@ export class AuthService {
     }
 
     throw new HttpException(
-      'Неккоректный логин или пароль',
+      'Неверный логин или пароль',
       HttpStatus.UNAUTHORIZED,
     );
   }

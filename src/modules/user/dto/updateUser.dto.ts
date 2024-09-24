@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNumber, IsOptional, IsString, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -46,7 +54,8 @@ export class UpdateUserDto {
     example: '12341',
     description: 'Код для сброса пароля',
   })
-  @IsNumber()
-  @Length(6)
+  @IsNumber({}, { message: 'Код должен быть числом' })
+  @Min(100000, { message: 'Код должен состоять из 6 цифр' })
+  @Max(999999, { message: 'Код должен состоять из 6 цифр' })
   code: number;
 }

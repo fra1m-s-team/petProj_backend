@@ -45,7 +45,8 @@ export class CodeService {
 
   async validateCode(code: number, userId: number) {
     const userCode = await this.getCodeByUserId(userId);
-
+    //FIXME: Достает код из бд самый первый, а должен последний
+console.log('12, usercode: ', userCode, 'codeDTO: ', code)
     if (code !== userCode.code) {
       return false;
     }

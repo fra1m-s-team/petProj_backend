@@ -8,7 +8,7 @@ export class AuthUserDto {
     description: 'Почта пользователя',
   })
   @IsString({ message: 'Должно быть строкой' })
-  @IsEmail({}, { message: 'Не корректный email' })
+  @IsEmail({}, { message: 'Не корректный логин' })
   email: string;
 
   @ApiProperty({
@@ -19,7 +19,7 @@ export class AuthUserDto {
   })
   @IsString({ message: 'Должно быть строкой' })
   @Length(6, 16, {
-    message: 'Длинна пароля должна быть не меньше 8 и не больше 16',
+    message: 'Не корректный пароль',
   })
   password: string;
 }

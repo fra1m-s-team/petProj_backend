@@ -9,6 +9,7 @@ import {
   Param,
   UseInterceptors,
   HttpException,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -155,7 +156,7 @@ export class UserController {
   @ApiCookieAuth('refreshToken')
   @ApiOperation({ summary: 'Смена пароля' })
   @ApiResponse({ status: 200, type: updateUser })
-  @Post('/patch')
+  @Patch('/patch')
   async userPatch(
     @Cookies('refreshToken') token: string,
     @Body() updateUserDto: UpdateUserDto,

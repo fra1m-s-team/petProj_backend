@@ -17,8 +17,8 @@ export class CreateUserDto {
     maxLength: 16,
   })
   @IsString({ message: 'Должно быть строкой' })
-  @Length(4, 16, {
-    message: 'Длинна пароля должна быть не меньше 4 и не больше 16',
+  @Length(6, 16, {
+    message: 'Длинна пароля должна быть не меньше 6 и не больше 16',
   })
   password: string;
 

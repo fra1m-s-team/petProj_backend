@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, Length } from 'class-validator';
+import { IsNumber, IsString, Length, Max, Min } from 'class-validator';
 import { Column } from 'typeorm';
 
 export class CreateCodeDto {
@@ -7,8 +7,9 @@ export class CreateCodeDto {
     example: '12341',
     description: 'Код для сброса пароля',
   })
-  @IsNumber()
-  @Length(6)
+  @IsNumber({}, { message: 'Код должен быть числом' })
+  @Min(100000, { message: 'Код должен состоять минимум из 6 цифр' })
+  @Max(999999, { message: 'Код должен состоять максимум из 6 цифр' })
   code?: number;
 
   @ApiProperty({

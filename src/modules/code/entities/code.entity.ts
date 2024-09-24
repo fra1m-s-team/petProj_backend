@@ -17,7 +17,7 @@ export class CodeEntity extends BaseEntity {
   id: number;
 
   @ApiProperty({
-    example: '12341',
+    example: '123412',
     description: 'Код для сброса пароля',
   })
   @Column({ unique: true, nullable: false })
