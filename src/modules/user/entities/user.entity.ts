@@ -24,7 +24,7 @@ export class UserEntity extends BaseEntity {
   @ApiProperty({
     example: 'pass123',
     description: 'Пароль пользователя',
-    minLength: 4,
+    minLength: 6,
     maxLength: 16,
   })
   @Column({ nullable: false })

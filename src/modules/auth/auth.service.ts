@@ -129,16 +129,18 @@ export class AuthService {
   }
 
   async newHashPassword(
-    password: string,
-    newPassword: string,
     user: UserEntity,
+    newPassword: string,
+    password?: string,
   ) {
-    const passwordCompare = await crypto.compare(password, user.password);
-    if (!passwordCompare) {
-      throw new HttpException(
-        'Старый пароль не верный',
-        HttpStatus.UNAUTHORIZED,
-      );
+    if (password) {
+      const passwordCompare = await crypto.compare(password, user.password);
+      if (!passwordCompare) {
+        throw new HttpException(
+          'Старый пароль не верный',
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
     }
 
     const newPasswordMatch = await crypto.compare(newPassword, user.password);

@@ -31,13 +31,15 @@ import {
   LogoutResponseSchema,
   RefreshTokenResponseSchema,
   RegistrationResponseSchema,
-  sendСonfirmCode,
-  updateUser,
+  resetUserPasswordResponseSchema,
+  sendСonfirmCodeResponseSchema,
+  updateUserResponseSchema,
 } from '@schemas/respones-schemas';
 import { AuthBodySchema, RegistrationBodySchema } from '@schemas/body-schemas';
 import { RegistrationErrorSchema } from '@schemas/error-schemas';
 import { Cookies } from '@decorators/cookie.decorator';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
 
 @ApiTags('User CRUD')
 @UseInterceptors(LoggingInterceptor)
@@ -155,7 +157,7 @@ export class UserController {
 
   @ApiCookieAuth('refreshToken')
   @ApiOperation({ summary: 'Смена пароля' })
-  @ApiResponse({ status: 200, type: updateUser })
+  @ApiResponse({ status: 200, type: updateUserResponseSchema })
   @Patch('/patch')
   async userPatch(
     @Cookies('refreshToken') token: string,
@@ -187,21 +189,49 @@ export class UserController {
 
   @ApiCookieAuth('refreshToken')
   @ApiOperation({ summary: 'Отправка кода пользователю' })
-  @ApiResponse({ status: 200, type: sendСonfirmCode })
+  @ApiResponse({ status: 200, type: sendСonfirmCodeResponseSchema })
   @Post('/send-code')
-  async sendCode(@Cookies('refreshToken') token: string, @Res() res: Response) {
+  async sendCode(@Body() email: { email: string }, @Res() res: Response) {
     try {
-      if (!token) {
+      if (!email.email) {
         return res
-          .status(HttpStatus.UNAUTHORIZED)
-          .json({ message: 'Вы не авторизованы' });
+          .status(HttpStatus.BAD_REQUEST)
+          .json({ message: 'Email не может быть пустым' });
       }
 
-      const payload = await this.userService.sendCode(token);
+      const payload = await this.userService.sendCode(email.email);
 
       return res
         .status(HttpStatus.OK)
         .json({ mesage: 'Код отправлен вам на почту', ...payload });
+    } catch (error) {
+      return res.status(error.status).json({ message: error.message });
+    }
+  }
+
+  @ApiCookieAuth('refreshToken')
+  @ApiOperation({ summary: 'Смена пароля' })
+  @ApiResponse({ status: 200, type: resetUserPasswordResponseSchema })
+  @Patch('/reset')
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const payload = await this.userService.resetUserPassword(
+        resetPasswordDto,
+      );
+
+      if (payload === false) {
+        return res
+          .status(HttpStatus.BAD_REQUEST)
+          .json('Произошла ошибка попробуйте снова');
+      }
+
+      return res
+        .status(HttpStatus.OK)
+        .clearCookie('refreshToken')
+        .json({ message: 'Пароль успешно сброше' });
     } catch (error) {
       return res.status(error.status).json({ message: error.message });
     }

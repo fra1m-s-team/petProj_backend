@@ -18,6 +18,7 @@ import { MailService } from '@modules/mail/mail.service';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { CodeService } from '@modules/code/code.service';
 import { CreateCodeDto } from '@modules/code/dto/createCode.dto';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -29,7 +30,7 @@ export class UserService {
     private codeService: CodeService,
   ) {}
 
-  private async validateUser(email: string) {
+  private async validateNewUser(email: string) {
     const candidate = await this.getUserByEmail(email);
 
     if (candidate) {
@@ -41,7 +42,7 @@ export class UserService {
   }
 
   async registrationUser(createUserDto: CreateUserDto) {
-    await this.validateUser(createUserDto.email);
+    await this.validateNewUser(createUserDto.email);
 
     const activationLink = await uuid.v4();
 
@@ -137,54 +138,49 @@ export class UserService {
   }
 
   async getUserByEmail(email: string) {
+    if (!email) {
+      return null;
+    }
+
     const user = await this.userRepository.findOne({
       where: { email },
     });
     return user;
   }
 
-  async updateUser(updateUserDto: UpdateUserDto, token: string) {
-    const user = await this.getUserByEmail(updateUserDto.email);
-
+  async validateUser(email: string) {
+    const user = await this.getUserByEmail(email);
+    console.log('email: ', email, 'user: ', user);
     if (!user) {
       throw new HttpException(
         'Пользователь с таким email не существует',
         HttpStatus.BAD_REQUEST,
       );
     }
-
     if (user.isActivated === false) {
       throw new HttpException(
         'Почта пользовтеля не активирована',
         HttpStatus.UNAUTHORIZED,
       );
     }
+    return user;
+  }
+
+  async updateUser(updateUserDto: UpdateUserDto, token: string) {
+    const user = await this.validateUser(updateUserDto.email);
 
     const code$ = await this.codeService.getCodeByUserId(user.id);
 
     if (!code$) {
-      await this.sendCode(token);
-      const validate = await this.codeService.validateCode(
-        updateUserDto.code,
-        user.id,
-      );
-      if (validate === false) {
-        throw new HttpException('Неверный код', HttpStatus.BAD_REQUEST);
-      }
+      await this.sendCode(user.email);
+      await this.throwInvalidCode(updateUserDto.code, user.id);
     }
-
-    const validate = await this.codeService.validateCode(
-      updateUserDto.code,
-      user.id,
-    );
-    if (validate === false) {
-      throw new HttpException('Неверный код', HttpStatus.BAD_REQUEST);
-    }
+    await this.throwInvalidCode(updateUserDto.code, user.id);
 
     const newPassword = await this.authService.newHashPassword(
-      updateUserDto.password,
-      updateUserDto.newPassword,
       user,
+      updateUserDto.newPassword,
+      updateUserDto.password,
     );
 
     user.password = newPassword;
@@ -194,6 +190,34 @@ export class UserService {
     await this.codeService.delteCode(code$.code);
 
     return newPassword ? true : false;
+  }
+
+  async resetUserPassword(resetPasswordDto: ResetPasswordDto) {
+    const user = await this.validateUser(resetPasswordDto.email);
+    const code$ = await this.codeService.getCodeByUserId(user.id);
+    if (!code$) {
+      await this.sendCode(user.email);
+      await this.throwInvalidCode(resetPasswordDto.code, user.id);
+    }
+    await this.throwInvalidCode(resetPasswordDto.code, user.id);
+    const newPassword = await this.authService.newHashPassword(
+      user,
+      resetPasswordDto.newPassword,
+    );
+
+    user.password = newPassword;
+    await this.userRepository.save(user);
+
+    await this.codeService.codeIsUsed(user.id);
+    await this.codeService.delteCode(code$.code);
+    return newPassword ? true : false;
+  }
+
+  private async throwInvalidCode(code: number, userId: number) {
+    const isValid = await this.codeService.validateCode(code, userId);
+    if (!isValid) {
+      throw new HttpException('Неверный код', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async getUserByToken(token: string) {
@@ -208,9 +232,8 @@ export class UserService {
     return user;
   }
 
-  async sendCode(token: string) {
-    const user = await this.getUserByToken(token);
-
+  async sendCode(email: string) {
+    const user = await this.validateUser(email);
     const code = await this.codeService.createCode({ userId: user.id });
 
     await this.mailService.sendConfirmMail({

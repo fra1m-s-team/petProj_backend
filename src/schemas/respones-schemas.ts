@@ -53,7 +53,7 @@ class LogoutResponseSchema {
   message: 'string';
 }
 
-class updateUser {
+class updateUserResponseSchema {
   @ApiProperty({
     default: 'Пароль успешно сброшен',
     description: 'Cообщение пользователю о сбросе пароля',
@@ -61,7 +61,7 @@ class updateUser {
   message: 'string';
 }
 
-class sendСonfirmCode {
+class sendСonfirmCodeResponseSchema {
   @ApiProperty({
     default: 'Письмо с кодом успешно отрпавленно',
     description: 'Письмо пользователю с кодом для сброса пароля',
@@ -76,12 +76,14 @@ class sendСonfirmCode {
 }
 
 class RefreshTokenResponseSchema extends AuthResponseSchema {}
+class resetUserPasswordResponseSchema extends updateUserResponseSchema {}
 
 export {
   RefreshTokenResponseSchema,
   LogoutResponseSchema,
   AuthResponseSchema,
   RegistrationResponseSchema,
-  updateUser,
-  sendСonfirmCode,
+  updateUserResponseSchema,
+  sendСonfirmCodeResponseSchema,
+  resetUserPasswordResponseSchema,
 };

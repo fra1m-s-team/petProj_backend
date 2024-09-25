@@ -13,7 +13,7 @@ export class CreateUserDto {
   @ApiProperty({
     example: 'pass123',
     description: 'Пароль пользователя',
-    minLength: 4,
+    minLength: 6,
     maxLength: 16,
   })
   @IsString({ message: 'Должно быть строкой' })

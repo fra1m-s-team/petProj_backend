@@ -33,10 +33,15 @@ export class CodeService {
   }
 
   async getCodeByUserId(userId: number) {
+    //FIXME: Достает код из бд самый первый, а должен последний
+
     const code = await this.codeRepository.findOne({
       where: {
         userId,
         isUsed: false,
+      },
+      order: {
+        createdAt: 'DESC',
       },
     });
 
@@ -45,8 +50,6 @@ export class CodeService {
 
   async validateCode(code: number, userId: number) {
     const userCode = await this.getCodeByUserId(userId);
-    //FIXME: Достает код из бд самый первый, а должен последний
-console.log('12, usercode: ', userCode, 'codeDTO: ', code)
     if (code !== userCode.code) {
       return false;
     }
