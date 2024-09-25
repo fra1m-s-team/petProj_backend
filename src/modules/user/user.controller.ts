@@ -179,7 +179,7 @@ export class UserController {
       return res
         .status(HttpStatus.OK)
         .clearCookie('refreshToken')
-        .redirect('http://localhost:5173/auth');
+        .json({ message: 'Пароль успешно изменён' });
     } catch (error) {
       return res.status(error.status).json({ message: error.message });
     }
