@@ -4,9 +4,13 @@ import {
   Column,
   BaseEntity,
   OneToMany,
+  ManyToMany,
+  JoinColumn,
+  JoinTable,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { TokenEntity } from '@modules/auth/entities/token.entity';
+import { SceneEntity } from '@modules/scene/entities/scene.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -55,4 +59,19 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => TokenEntity, (token) => token.userId)
   // @JoinColumn({ name: 'tokenId' })
   token: TokenEntity[];
+
+  //TODO:
+  // @ApiProperty({
+  //   example: [1, 2, 23, 12, 321],
+  //   description: 'Массив id сохраненных сцен пользователя',
+  // })
+  // @ManyToMany(() => SceneEntity, (scene) => scene.usersId, { cascade: true })
+  // @JoinTable({ name: 'users_scenes' })
+  // scenes: SceneEntity[];
+  @ApiProperty({
+    example: [SceneEntity],
+    description: 'Массив созданых сцен пользователя',
+  })
+  @OneToMany(() => SceneEntity, (scene) => scene.author)
+  scene: SceneEntity[];
 }
